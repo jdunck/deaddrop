@@ -6,15 +6,20 @@ from functools import wraps
 
 from flask import (Flask, request, render_template, session, redirect, url_for,
     flash, abort, g)
+from flask.ext.babel import Babel
 from flask_wtf.csrf import CsrfProtect
 
 import config, version, crypto_util, store, background, zipfile
 from cStringIO import StringIO
 
+
 app = Flask(__name__, template_folder=config.SOURCE_TEMPLATES_DIR)
+
 app.secret_key = config.SECRET_KEY
 
 app.jinja_env.globals['version'] = version.__version__
+
+babel = Babel(app)
 
 def logged_in():
   if 'logged_in' in session: return True
@@ -192,4 +197,4 @@ def page_not_found(error):
 if __name__ == "__main__":
   # TODO: make sure this gets run by the web server
   CsrfProtect(app)
-  app.run(debug=True, port=8080)
+  app.run(host='0.0.0.0', debug=True, port=8080)

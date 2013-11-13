@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 
 from flask import Flask, request, render_template, send_file
+from flask.ext.babel import Babel
 from flask_wtf.csrf import CsrfProtect
 
 import config, version, crypto_util, store, background
@@ -12,6 +13,8 @@ app = Flask(__name__, template_folder=config.JOURNALIST_TEMPLATES_DIR)
 app.secret_key = config.SECRET_KEY
 
 app.jinja_env.globals['version'] = version.__version__
+
+babel = Babel(app)
 
 def get_docs(sid):
     """Get docs associated with source id `sid` sorted by submission date"""
@@ -123,4 +126,4 @@ def flag():
 if __name__ == "__main__":
   # TODO: make sure this gets run by the web server
   CsrfProtect(app)
-  app.run(debug=True, port=8081)
+  app.run(host='0.0.0.0', debug=True, port=8081)
